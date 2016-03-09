@@ -1,0 +1,26 @@
+//app 
+var io = require('socket.io')(server);
+var index_routes = require('./routes/')(io);
+
+//controller
+module.exports = function(io) {
+  return router.get('/home', function(req, res) {
+    if(!req.user || req.user.status !== 'ENABLED') {
+      return res.redirect('/login');
+    }
+
+    // emit to all connected sockets that the user is loading the page
+    io.emit('user-connecting', { name: req.user.name });
+
+    res.render('home', {
+      title: 'Home',
+      user: req.user
+    });
+  });
+}
+
+//
+    HTTP GET request to /home
+    Express handles route, renders view, returns to browser
+    Browser renders the page. Javascript starts socket.io connection to server
+    Socket.io handles incoming connection from client and now you can use socket.emit to send them data.
