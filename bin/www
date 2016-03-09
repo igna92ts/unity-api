@@ -19,7 +19,7 @@ app.set('port', port);
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server = app.server;
 
 
 /**
@@ -27,6 +27,7 @@ var server = http.createServer(app);
  */
 
 server.listen(port);
+app.io.listen(server);
 server.on('error', onError);
 server.on('listening', onListening);
 
