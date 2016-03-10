@@ -9,8 +9,11 @@ module.exports.controller = function(app){
 
 	});
 
-	app.io.on('connection',function(){
-		console.log("user connected");
+
+	app.io.on( "connection", function( socket )
+	{
+	    
 	});
+
 
 }

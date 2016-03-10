@@ -6,17 +6,15 @@ var fs = require('fs');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var socketio = require('socket.io');
 
 //configuracion
 var config = require('./config');
 
 var app = express();
 app.locals = config // seteo la configuracion para que sea accesible mas tarde
-var server = require('http').createServer(app);
-var io = require('socket.io')(server);
-app.server = server;
+io = socketio();
 app.io = io;
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
