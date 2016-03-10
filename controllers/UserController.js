@@ -10,10 +10,19 @@ module.exports.controller = function(app){
 	});
 
 
-	app.io.on( "connection", function( socket )
-	{
-	    
+	io.on('connection', function(socket){
+
+		socket.on('USER_CONNECT', function(){
+	    	console.log('user CONNECTED');
+	    	socket.emit("USER_CONNECTED",{
+	    		name:"Nacho"
+	    	});
+		});
+
+		socket.on('disconnect', function(){
+	    	//console.log('user disconnected');
+		});
 	});
-
-
 }
+
+
