@@ -1,10 +1,11 @@
 var app = require('express')();
 var http = require('http').Server(app);
 
+var seaport = require('seaport');
+ports = seaport.connect('localhost',7999);
+
 app.get('/', function(req, res){
   res.send('<h1>Hello 8003</h1>');
 });
 
-http.listen(8003, function(){
-  console.log('listening on *:8003');
-});
+http.listen(ports.register('sub-server'));//se mete en uno generado por seaport
