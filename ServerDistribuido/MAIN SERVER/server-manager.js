@@ -16,7 +16,7 @@ http.createServer(function(req,res){
         res.end('Service unavailable');
         return;
     }
-    console.log(addresses[i]);
+    console.log(addresses[i].port);
 	proxy.web(req,res,{
 		target:addresses[i]
 	});
