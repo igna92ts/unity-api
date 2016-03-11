@@ -8,6 +8,7 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var socketio = require('socket.io');
 
+
 //configuracion
 var config = require('./config');
 
@@ -67,5 +68,25 @@ app.use(function(err, req, res, next) {
   });
 });
 
+///////////////////////////////////////////////////
+// CODIGO PARA DISTRO
+//////////////////////////////////////////////////
+/*"use strict";
+const
+  zmq = require('zmq'),
+  subscriber = zmq.socket('sub');
+
+// Subscribe to all messages.
+subscriber.subscribe('');
+
+// Handle messages from publisher.
+subscriber.on('message', function(data) {
+  var msg = JSON.parse(data);
+  console.log(msg.pid + ': ' + new Date(msg.timestamp) + ' at SERVER_1');
+});
+
+// Connect to publisher.
+subscriber.connect('tcp://localhost:5432');*/
+//////////////////////////////////////////////////////////////
 
 module.exports = app;

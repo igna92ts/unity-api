@@ -4,8 +4,8 @@ var User = require('../models/User');
 module.exports.controller = function(app){
 
 	app.get('/signup',function(req,res){
-
-		res.render("index",{title:"Hola"});
+		
+		res.render("index",{title:process.pid});
 
 	});
 
