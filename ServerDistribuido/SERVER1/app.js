@@ -17,6 +17,13 @@ function estimatePi() {
     return 4 * inside / n;
 }
 
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
 
 app.get('/', function(req, res){
   res.send('<h1>Hello 8001</h1>' + estimatePi());
