@@ -1,5 +1,6 @@
 var app = require('express')();
 var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 var seaport = require('seaport');
 ports = seaport.connect('localhost',7999);
@@ -27,6 +28,10 @@ app.use(function(err, req, res, next) {
 
 app.get('/', function(req, res){
   res.send('<h1>Hello 8001</h1>' + estimatePi());
+});
+
+io.on('connection', function(socket){
+  console.log('a user connected');
 });
 
 http.listen(ports.register('sub-server'));
