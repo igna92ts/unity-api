@@ -5,18 +5,6 @@ var io = require('socket.io')(http);
 var seaport = require('seaport');
 ports = seaport.connect('localhost',7999);
 
-function estimatePi() {
-    var n = 10000000, inside = 0, i, x, y;
-
-    for ( i = 0; i < n; i++ ) {
-        x = Math.random();
-        y = Math.random();
-        if ( Math.sqrt(x * x + y * y) <= 1 )
-            inside++;
-    }
-
-    return 4 * inside / n;
-}
 
 app.use(function(err, req, res, next) {
   res.status(err.status || 500);
@@ -27,11 +15,26 @@ app.use(function(err, req, res, next) {
 });
 
 app.get('/', function(req, res){
-  res.send('<h1>Hello 8001</h1>' + estimatePi());
+  res.send('<h1>Hello 8001</h1>' );
 });
 
 io.on('connection', function(socket){
   console.log('a user connected');
+
+  socket.on('disconnect',function(){
+    console.log('user disconnected');
+  });
+
+  socket.on('USER_CONNECT',function(msg){
+    console.log(msg);
+    io.emit("USER_CONNECTED",msg);
+  });
+
+  socket.on('movement',function(msg){
+    socket.emit('player_movement',msg);
+  });
+
+
 });
 
 http.listen(ports.register('sub-server'));
