@@ -1,0 +1,8 @@
+-no emitir valores nulos para las velocidades ya que no cambian nada.
+-solo enviar objetos que esten cerca del usuario
+-delta encoding
+-asignar prioridades a los objetos para que cuando mandas un paquete salgan los importantes primero con un acumulador de prioridad
+los primeros N objetos son los que vas a actualizar ese frame
+-cortar los requests por parquete para que no sean muy grandes ni muy chicos
+-limitar e incrementar el limite de bandwidth detectando la conexion
+-no smoothear la exprapolacion, hacerlo bien

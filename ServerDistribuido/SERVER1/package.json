@@ -4,6 +4,9 @@
   "description": "my first socket.io app",
   "dependencies": {
     "express": "^4.13.4",
+    "guid": "0.0.12",
+    "nohm": "^0.9.8",
+    "redis": "^2.5.1",
     "seaport": "^2.0.9"
   }
 }
