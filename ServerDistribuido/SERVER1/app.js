@@ -32,7 +32,7 @@ redisClient.get('d_object_index',function(err,obj){
 //REGISTRO EL SERVICIO EN SEAPORT
 var seaport = require('seaport');
 ports = seaport.connect(config.seaport.port,config.seaport.host);
-
+var currentTimestamp = 0;
 
 io.on('connection', function(socket){
 
@@ -45,27 +45,23 @@ io.on('connection', function(socket){
   });
 
   socket.on('NEW_PLAYER',function(){
+
     //EL TIPO SIEMPRE EN MAYUSCULA LA PRIMERA
-    var player = pkg_player.registerPlayer(redisClient,'Player'); //DEVUELVE UNA PROMESA DEL RESULTADO DE LA QUERY
+    var player = pkg_player.registerPlayer(redisClient,'Player',socket.id); //DEVUELVE UNA PROMESA DEL RESULTADO DE LA QUERY
     player.done(function(){
       io.emit("OBJECT_CREATED",player.valueOf());
     });
   });
 
   socket.on('STATE_UPDATE',function(msg){
-    var setOperation = pkg_objects.setGameState(redisClient,msg.state);
-    setOperation.done(function(){
-      var gameState = pkg_objects.getGameState(redisClient); //estado del juego entero
-      gameState.done(function(){
-        socket.broadcast.emit("GAME_STATE",gameState.valueOf());
-      });
-    });
+      var setOperation = pkg_objects.setGameState(redisClient,msg.state,socket.id);
+
   });
 
-  socket.on('GET_INIT',function(){
-    var gameState = pkg_objects.getGameState(redisClient); //estado del juego entero
+  socket.on('GET_STATE',function(){
+    var gameState = pkg_objects.getGameState(redisClient,socket.id); //estado del juego entero
     gameState.done(function(){
-       socket.emit("INITIAL_STATE",gameState.valueOf());
+       socket.emit("STATE",gameState.valueOf());
     });
   });
 

@@ -4,10 +4,11 @@ var Player = require('../schemas/player_schema.js');
 
 module.exports = {
 
-	registerPlayer: function(client,type){
+	registerPlayer: function(client,type,owner){
 		return q.Promise(function(resolve,reject){
 			var player = new Player({
 				type:type,
+				ownedBy:owner
 			});
 
 			client.incr('d_object_index',function(err,index){

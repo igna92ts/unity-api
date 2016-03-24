@@ -4,16 +4,18 @@ var q = require('q');
 
 module.exports = {
 
-	getGameState: function(client){
+	getGameState: function(client,owner){
 		return q.Promise(function(resolve,reject){
 			var result = Array();
 			client.hvals('d_object',function(err,obj){
 				if(err){
 					reject(err);
 				}else{
-					
+					var tmp;
 					obj.forEach(function(o){
-						result.push(JSON.parse(o));
+						tmp = JSON.parse(o);
+						if(tmp.ownedBy != owner)
+							result.push(JSON.parse(o));
 					});
 
 					resolve({state:result});
@@ -22,13 +24,14 @@ module.exports = {
 		});
 	},
 
-	setGameState: function(client,state){
+	setGameState: function(client,state,owner){
 		return q.Promise(function(resolve,reject){
 			if(state == null){
 				resolve();
 			}else{
 				state.forEach(function(object){
-					client.hset("d_object",object.id,JSON.stringify(object));
+					if(object.ownedBy == owner)
+						client.hset("d_object",object.id,JSON.stringify(object));
 				});
 				resolve();
 			}
