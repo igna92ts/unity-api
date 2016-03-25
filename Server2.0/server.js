@@ -1,5 +1,6 @@
 const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
+var eventMap = require('./events.js');
 
 
 server.on('error', (err) => {
@@ -11,9 +12,11 @@ server.on('message',(msg,rinfo) => {
 	/*console.log(JSON.parse(msg));
 	server.send("Come dgram",rinfo.port,rinfo.address);*/
 	msg = msg.toString();
-	var event = msg.split(/_(.+)?/)[0];
-	var msg = msg.split(/_(.+)?/)[1];
+	var event = msg.split(/&(.+)?/)[0];
+	var msg = msg.split(/&(.+)?/)[1];
 
+	if(eventMap[event] != undefined)
+		eventMap[event](msg);
 });
 
 server.on('listening', () => {
@@ -23,3 +26,5 @@ server.on('listening', () => {
 
 //si exclusive esta en true no comparte handles y no se puede clusterear
 server.bind({address:'localhost',port:8000,exclusive:false});
+
+
