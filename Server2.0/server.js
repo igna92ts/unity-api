@@ -36,7 +36,6 @@ server.on('message',(msg,rinfo) => {
 	msg = msg.toString();
 	var event = msg.split(/&(.+)?/)[0];
 	var payLoad = msg.split(/&(.+)?/)[1];
-
 	//server.send(composeDgram(eventName,payLoad),rinfo.port,rinfo.address);
 	if(eventMap[event] != undefined)
 		eventMap[event](payLoad,rinfo,redisClient,server);

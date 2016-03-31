@@ -4,7 +4,7 @@ var q = require('q');
 
 module.exports = {
 
-	getGameState: function(client,owner){
+	getGameState: function(client){
 		return q.Promise(function(resolve,reject){
 			var result = Array();
 			client.hvals('d_object',function(err,obj){
@@ -14,8 +14,7 @@ module.exports = {
 					var tmp;
 					obj.forEach(function(o){
 						tmp = JSON.parse(o);
-						if(tmp.ownedBy != owner)
-							result.push(JSON.parse(o));
+						result.push(JSON.parse(o));
 					});
 
 					resolve({state:result});
