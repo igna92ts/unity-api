@@ -1,6 +1,7 @@
 var redis = require('redis');
 var q = require('q');
 var Player = require('../schemas/player_schema.js');
+var physicsWorld = require('./Physics/world.js');
 
 module.exports = {
 

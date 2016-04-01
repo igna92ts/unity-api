@@ -25,6 +25,7 @@ var timeStep = 1/60;
 setInterval(function(){
 	world.step(timeStep);
 	//console.log(circleBody.position[1]);
+	//console.log(world.bodies[0].position[1]);
 },1000 * timeStep);
 
 module.exports = world;

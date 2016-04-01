@@ -16,7 +16,6 @@ eventMap["GET_UPDATES"] = function(msg,rinfo,redisClient,server){
 
 eventMap["NEW_PLAYER"] = function(msg,rinfo,redisClient,server){
 	//EL TIPO SIEMPRE EN MAYUSCULA LA PRIMERA
-
     var player = pkg_player.registerPlayer(redisClient,'Player',rinfo.port); //DEVUELVE UNA PROMESA DEL RESULTADO DE LA QUERY
     player.done(function(){
       server.send("OBJECT_CREATED" +"&"+JSON.stringify(player.valueOf()),rinfo.port,rinfo.address);
