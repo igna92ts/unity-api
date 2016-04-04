@@ -1,29 +1,12 @@
 const dgram = require('dgram');
 const server = dgram.createSocket('udp4');
+
+//requirea
 var eventMap = require('./events.js');
-var physicsWorld = require('./Physics/world.js');
+var world = require('./Physics/world.js');
 var config = require('./config.js');
 var q = require('q');
-
-//SETEO REDIS 
-var redis = require('redis');
-var redisClient = redis.createClient(config.redis.port,config.redis.host);
-
-//CONFIG REDIS
-redisClient.on('error',function(err){
-    console.log("Error while connecting to redis" + err);
-});
-redisClient.on('connect', function() {
-    console.log('connected to redis');
-});
-redisClient.on('diconnect', function() {
-    console.log('disconnected from redis');
-});
-//SET INDEXES
-redisClient.get('d_object_index',function(err,obj){
-  if(err || obj === null)
-    redisClient.set('d_object_index',0);
-});
+var redisClient = require('./redisClient.js');
 
 //CONFIG SERVIDOR
 server.on('error', (err) => {
@@ -38,7 +21,7 @@ server.on('message',(msg,rinfo) => {
 	var payLoad = msg.split(/&(.+)?/)[1];
 	//server.send(composeDgram(eventName,payLoad),rinfo.port,rinfo.address);
 	if(eventMap[event] != undefined)
-		eventMap[event](payLoad,rinfo,redisClient,server);
+		eventMap[event](payLoad,rinfo,server);
 
 });
 
@@ -49,4 +32,5 @@ server.on('listening', () => {
 
 //si exclusive esta en true no comparte handles y no se puede clusterear
 server.bind({address:'localhost',port:8000,exclusive:false});
+
 
