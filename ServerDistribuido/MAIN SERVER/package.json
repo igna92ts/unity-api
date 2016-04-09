@@ -1,9 +1,0 @@
-{
-  "name": "socket-chat-example",
-  "version": "0.0.1",
-  "description": "my first socket.io app",
-  "dependencies": {
-    "http-proxy": "^1.13.2",
-    "seaport": "^2.0.9"
-  }
-}
