@@ -1,7 +1,8 @@
-const dgram = require('dgram');
+import dgram = require('dgram');
 const server = dgram.createSocket('udp4');
-global.flatStringify = function (x) {
-    for(var i in x) {
+declare var global:;
+global.flatStringify = function (x:Object) {
+    for(let i in x) {
         if(!x.hasOwnProperty(i)) {
             // weird as it might seem, this actually does the trick! - adds parent property to self
             x[i] = x[i];
@@ -11,22 +12,22 @@ global.flatStringify = function (x) {
 }
 
 //requirea
-var eventMap = require('./events.js');
-var config = require('./config.js');
-var q = require('q');
-var redisClient = require('./redisClient');
-var world_manager = require('./Physics/world_manager.js');
+import eventMap = require('./events.js');
+import config = require('./config.js');
+import q = require('q');
+import redisClient = require('./redisClient');
+import world_manager = require('./Physics/world_manager.js');
 //CONFIG SERVIDOR
 server.on('error', (err) => {
 	console.log('server error:' + err.stack);
 	server.close();
 });
 
-server.on('message',(msg,rinfo) => {
+server.on('message',(msg:string,rinfo:Object) => {
 
 	msg = msg.toString();
-	var event = msg.split(/&(.+)?/)[0];
-	var payLoad = msg.split(/&(.+)?/)[1];
+	var event:string = msg.split(/&(.+)?/)[0];
+	var payLoad:string = msg.split(/&(.+)?/)[1];
 	//server.send(composeDgram(eventName,payLoad),rinfo.port,rinfo.address);
 	if(eventMap[event] != undefined)
 		eventMap[event](payLoad,rinfo,server);
