@@ -1,10 +1,10 @@
-var client = require('../redisClient.js');
-var q = require('q');
+import client = require('./redisClient');
+import q = require('q');
 
 
-module.exports = {
+module pkg_objects {
 
-	getGameState: function(){
+	export function getGameState(){
 		return q.Promise(function(resolve,reject){
 			var result = Array();
 			client.hvals('d_object',function(err,obj){
@@ -21,9 +21,9 @@ module.exports = {
 				}
 			});
 		});
-	},
+	}
 
-	setGameState: function(state){
+	export function setGameState(state){
 		return q.Promise(function(resolve,reject){
 			if(state == null){
 				resolve();

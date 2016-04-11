@@ -1,18 +1,17 @@
 import dgram = require('dgram');
 const server = dgram.createSocket('udp4');
-declare var global:;
-global.flatStringify = function (x:Object) {
-    for(let i in x) {
-        if(!x.hasOwnProperty(i)) {
-            // weird as it might seem, this actually does the trick! - adds parent property to self
-            x[i] = x[i];
-        }
-    }
-    return JSON.stringify(x);
-}
+// global.flatStringify = function (x:Object) {
+//     for(let i in x) {
+//         if(!x.hasOwnProperty(i)) {
+//             // weird as it might seem, this actually does the trick! - adds parent property to self
+//             x[i] = x[i];
+//         }
+//     }
+//     return JSON.stringify(x);
+// }
 
 //requirea
-import eventMap = require('./events.js');
+import {eventMap} from './events/event_manager';
 import config = require('./config.js');
 import q = require('q');
 import redisClient = require('./redisClient');

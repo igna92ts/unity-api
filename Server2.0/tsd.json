@@ -1,0 +1,21 @@
+{
+  "version": "v4",
+  "repo": "borisyankov/DefinitelyTyped",
+  "ref": "master",
+  "path": "typings",
+  "bundle": "typings/tsd.d.ts",
+  "installed": {
+    "redis/redis.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "node/node.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "p2/p2.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "q/Q.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    }
+  }
+}
