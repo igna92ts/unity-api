@@ -1,6 +1,6 @@
-var p2 = require('p2');
-var physics = require('./world.js');
-var pkg_world = require('../redis_pkgs/pkg_world.js');
+import p2 = require('p2');
+import * as physics from './world';
+import {pkg_world}  from '../redis_pkgs/pkg_world';
 
 pkg_world.initWorld();
 

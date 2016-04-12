@@ -1,11 +1,12 @@
 
 //TRAIGO PAQUETES
-import pkg_player = require('../redis_pkgs/pkg_player');
-import pkg_objects = require('../redis_pkgs/pkg_objects');
+import {Map} from "../utils"
+import {pkg_player} from '../redis_pkgs/pkg_player';
+import {pkg_objects} from '../redis_pkgs/pkg_objects';
 
-export var eventMap:Array = new Array();
+export var eventMap:Map<Function>;
 
-eventMap["GET_UPDATES"] = function(msg:string,rinfo:Object,server){
+eventMap["GET_UPDATES"] = function(msg:string,rinfo:any,server:any){
 
 	var gameState = pkg_objects.getGameState();
 	gameState.done(function(){
@@ -14,7 +15,7 @@ eventMap["GET_UPDATES"] = function(msg:string,rinfo:Object,server){
 };
 
 
-eventMap["NEW_PLAYER"] = function(msg,rinfo,server){
+eventMap["NEW_PLAYER"] = function(msg:string,rinfo:any,server:any){
     var player = pkg_player.registerPlayer('Player'); //DEVUELVE UNA PROMESA DEL RESULTADO DE LA QUERY
     player.done(function(){
       server.send("OBJECT_CREATED" +"&"+JSON.stringify(player.valueOf()),rinfo.port,rinfo.address);

@@ -12,12 +12,12 @@ const server = dgram.createSocket('udp4');
 
 //requirea
 import {eventMap} from './events/event_manager';
-import config = require('./config.js');
+import config = require('./config');
 import q = require('q');
-import redisClient = require('./redisClient');
-import world_manager = require('./Physics/world_manager.js');
+import redisClient = require('./redis_pkgs/redisClient');
+import world_manager = require('./Physics/world_manager');
 //CONFIG SERVIDOR
-server.on('error', (err) => {
+server.on('error', (err:Error) => {
 	console.log('server error:' + err.stack);
 	server.close();
 });
@@ -39,6 +39,6 @@ server.on('listening', () => {
 });
 
 //si exclusive esta en true no comparte handles y no se puede clusterear
-server.bind({address:'localhost',port:8000,exclusive:false});
+server.bind(8000,'localhost');
 
 
