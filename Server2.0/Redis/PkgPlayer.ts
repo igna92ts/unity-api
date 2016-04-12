@@ -1,18 +1,19 @@
-import client = require('./redisClient');
-import p2 = require('p2');
-import * as physics from '../Physics/world';
 import q = require('q');
-import {Player} from "../entities/Player";
+import p2 = require('p2');
+import client = require('../Redis/Client');
+import * as physics from '../Physics/World';
+import {Player} from "../Entities/Player";
+import {Vector2D} from "../Physics/Types"
 
 
-export module pkg_player {
+export module PkgPlayer {
 
 	export function registerPlayer(type:string){
 		return q.Promise(function(resolve,reject){
             
 			var player = new Player();
             player.type = type;
-            player.position = new Physics.Vector2D(Math.floor(Math.random() * (5 - 1 + 1)) + 1,Math.floor(Math.random() * (5 - 1 + 1)) + 1);   
+            player.position = new Vector2D(Math.floor(Math.random() * (5 - 1 + 1)) + 1,Math.floor(Math.random() * (5 - 1 + 1)) + 1);   
 
 			client.incr('d_object_index',function(err:Error,index:number){
 				player.id = index;

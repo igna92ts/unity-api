@@ -1,5 +1,4 @@
-import {Connection} from './entities/Connection'; 
-import * as utils from './utils';
+import {Connection} from './Entities/Connection'; 
 
 var redis = new Connection("localhost","6379"); 
 var seaport = new Connection("localhost","7999");

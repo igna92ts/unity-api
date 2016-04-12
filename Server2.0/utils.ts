@@ -1,5 +1,7 @@
-export interface Map<T> {
-    [K: string]: T;
+module utils{
+    export interface Map<T> {
+        [K: string]: T;
+    }
 }
 
 

@@ -1,8 +1,9 @@
-import Vector2D = Physics.Vector2D;
-import Vector3D = Physics.Vector3D;
-import Quaternion = Physics.Quaternion;
+import {Vector2D} from "../Physics/Types"
+import {Vector3D} from "../Physics/Types"
+import {Quaternion} from "../Physics/Types"
 
-namespace Physics{
+
+
     export class DynamicObject{
         id:number;
         type:string;
@@ -12,4 +13,3 @@ namespace Physics{
         linearVelocity:Vector3D = new Vector3D(0,0,0);
         angularVelocity:number = 0;
     }
-}

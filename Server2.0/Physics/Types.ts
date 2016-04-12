@@ -1,4 +1,4 @@
-namespace Physics{
+
      
         export class Vector2D{
             constructor();
@@ -46,4 +46,3 @@ namespace Physics{
             w:number = 0;
         }
     
-}

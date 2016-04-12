@@ -1,9 +1,9 @@
-import client = require('./redisClient');
-import DynamicObject = Physics.DynamicObject;
+import client = require('../Redis/Client');
+import {DynamicObject} from "../Entities/DynamicObject";
 import q = require('q');
 
 
-export module pkg_objects {
+export module PkgObjects {
 
 	export function getGameState(){
 		return q.Promise(function(resolve,reject){

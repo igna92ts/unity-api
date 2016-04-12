@@ -1,13 +1,13 @@
-import client = require('./redisClient');
+import client = require('../Redis/Client');
 import p2 = require('p2');
 import q = require('q');
-import * as physics from '../Physics/world';
-import DynamicObject = Physics.DynamicObject;
-var D_object = require('../schemas/d_object_schema.js');
+import * as physics from '../Physics/World';
+import {DynamicObject} from "../Entities/DynamicObject";
 
 
 
-export module pkg_world  {
+
+export module PkgWorld  {
 
     export function initWorld() {
         return q.Promise(function(resolve, reject) {
@@ -39,13 +39,10 @@ export module pkg_world  {
         return q.Promise(function(resolve, reject) {
             physics.map.forEach(function(world_id) {
                 if (world_id != undefined) {
-                    var object = new D_object({
-                        id: physics.map.indexOf(world_id),
-                        position: {
-                            x: physics.world.bodies[world_id - 1].position[0],
-                            y: physics.world.bodies[world_id - 1].position[1]
-                        }
-                    });
+                    var object = new DynamicObject();
+                    object.id = physics.map.indexOf(world_id);
+                    object.position.x = physics.world.bodies[world_id - 1].position[0];
+                    object.position.y = physics.world.bodies[world_id - 1].position[1];
 
                     client.hset("d_object", object.id, JSON.stringify(object));
                 }

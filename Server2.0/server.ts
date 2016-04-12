@@ -1,21 +1,12 @@
 import dgram = require('dgram');
 const server = dgram.createSocket('udp4');
-// global.flatStringify = function (x:Object) {
-//     for(let i in x) {
-//         if(!x.hasOwnProperty(i)) {
-//             // weird as it might seem, this actually does the trick! - adds parent property to self
-//             x[i] = x[i];
-//         }
-//     }
-//     return JSON.stringify(x);
-// }
 
 //requirea
-import {eventMap} from './events/event_manager';
+import {eventMap} from './Events/EventManager';
 import config = require('./config');
 import q = require('q');
-import redisClient = require('./redis_pkgs/redisClient');
-import world_manager = require('./Physics/world_manager');
+import redisClient = require('./Redis/Client');
+import worldManager = require('./Physics/WorldManager');
 //CONFIG SERVIDOR
 server.on('error', (err:Error) => {
 	console.log('server error:' + err.stack);
