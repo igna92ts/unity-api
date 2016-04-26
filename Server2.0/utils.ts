@@ -1,8 +1,5 @@
-module utils{
-    export interface Map<T> {
+declare module utils {
+    interface Map<T> {
         [K: string]: T;
     }
 }
-
-
-

@@ -6,6 +6,7 @@ import {eventMap} from './Events/EventManager';
 import config = require('./config');
 import q = require('q');
 import redisClient = require('./Redis/Client');
+import scriptManager = require('./Redis/ScriptManager');
 import worldManager = require('./Physics/WorldManager');
 //CONFIG SERVIDOR
 server.on('error', (err:Error) => {
@@ -14,13 +15,15 @@ server.on('error', (err:Error) => {
 });
 
 server.on('message',(msg:string,rinfo:Object) => {
-
+/*    scriptManager.run('hello',[], [],function(err:Error,result:any){
+        console.log(result);
+    });*/
 	msg = msg.toString();
 	var event:string = msg.split(/&(.+)?/)[0];
 	var payLoad:string = msg.split(/&(.+)?/)[1];
 	//server.send(composeDgram(eventName,payLoad),rinfo.port,rinfo.address);
 	if(eventMap[event] != undefined)
-		eventMap[event](payLoad,rinfo,server);
+		eventMap[event](JSON.parse(payLoad),rinfo,server);
 
 });
 
@@ -30,6 +33,6 @@ server.on('listening', () => {
 });
 
 //si exclusive esta en true no comparte handles y no se puede clusterear
-server.bind(8000,'localhost');
+server.bind(8000,process.env.HOST);
 
 

@@ -2,22 +2,46 @@
 //TRAIGO PAQUETES
 import {PkgPlayer} from '../Redis/PkgPlayer';
 import {PkgObjects} from '../Redis/PkgObjects';
+import {Response} from "../Entities/Response";
+import scriptManager = require('../Redis/ScriptManager');
+
 
 export var eventMap:utils.Map<Function> = {};
 
 eventMap["GET_UPDATES"] = function(msg:string,rinfo:any,server:any){
-
 	var gameState = PkgObjects.getGameState();
 	gameState.done(function(){
 		server.send("UPDATES" +"&"+JSON.stringify(gameState.valueOf()),rinfo.port,rinfo.address);
 	});
 };
 
+eventMap["SIGNUP_REQ"] = function(userData:any,rinfo:any,server:any){
+    scriptManager.run("PKG_USER",[userData.username,userData.password],["signup()"],function(err:Error,result:any){
+        var response:Response;
+        if(err)
+            response = new Response(false,err.message);
+        else{
+            if(result == "OK")
+                response = new Response(true,result);
+            else
+                response = new Response(false,result);
+        }
+        server.send("SIGNUP_RES"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
+    });
+};
 
-eventMap["NEW_PLAYER"] = function(msg:string,rinfo:any,server:any){
-    var player = PkgPlayer.registerPlayer('Player'); //DEVUELVE UNA PROMESA DEL RESULTADO DE LA QUERY
-    player.done(function(){
-      server.send("OBJECT_CREATED" +"&"+JSON.stringify(player.valueOf()),rinfo.port,rinfo.address);
+eventMap["LOGIN_REQ"] = function(userData:any,rinfo:any,server:any){
+    scriptManager.run("PKG_USER",[userData.username,userData.password],["login()"],function(err:Error,result:any){
+        var response:Response;
+        if(err)
+            response = new Response(false,err.message);
+        else{
+            if(result == 'OK')
+                response = new Response(true,result);
+            else
+                response = new Response(false,result);
+        }
+        server.send("LOGIN_RES"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
     });
 };
 
