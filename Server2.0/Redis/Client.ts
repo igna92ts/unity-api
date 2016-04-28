@@ -1,7 +1,7 @@
-import config = require('../config');
+import {connectionConfig} from "../config";
 //SETEO REDIS 
 import redis = require('redis');
-var redisClient = redis.createClient(config["redis"].port,config["redis"].host);
+var redisClient = redis.createClient(connectionConfig["redis"].port,connectionConfig["redis"].host);
 
 //CONFIG REDIS
 redisClient.on('error',function(err:Error){

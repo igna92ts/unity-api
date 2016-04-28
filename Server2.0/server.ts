@@ -3,7 +3,8 @@ const server = dgram.createSocket('udp4');
 
 //requirea
 import {eventMap} from './Events/EventManager';
-import config = require('./config');
+import {connectionConfig} from "./config";
+import {protocolID} from "./config";
 import q = require('q');
 import redisClient = require('./Redis/Client');
 import scriptManager = require('./Redis/ScriptManager');
@@ -18,12 +19,17 @@ server.on('message',(msg:string,rinfo:Object) => {
 /*    scriptManager.run('hello',[], [],function(err:Error,result:any){
         console.log(result);
     });*/
-	msg = msg.toString();
-	var event:string = msg.split(/&(.+)?/)[0];
-	var payLoad:string = msg.split(/&(.+)?/)[1];
+    
+	var data:string[] = msg.toString().split("&");
+	var recievedProtocol:string = data[0];
+	var event:string = data[1];
+	var payLoad:string = data[2];
+	
 	//server.send(composeDgram(eventName,payLoad),rinfo.port,rinfo.address);
-	if(eventMap[event] != undefined)
-		eventMap[event](JSON.parse(payLoad),rinfo,server);
+	if(recievedProtocol == protocolID){
+    	if(eventMap[event] != undefined)
+    		eventMap[event](JSON.parse(payLoad),rinfo,server);
+	}
 
 });
 

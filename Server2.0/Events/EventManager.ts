@@ -3,6 +3,7 @@
 import {PkgPlayer} from '../Redis/PkgPlayer';
 import {PkgObjects} from '../Redis/PkgObjects';
 import {Response} from "../Entities/Response";
+import {protocolID} from "../config";
 import scriptManager = require('../Redis/ScriptManager');
 
 
@@ -21,12 +22,12 @@ eventMap["SIGNUP_REQ"] = function(userData:any,rinfo:any,server:any){
         if(err)
             response = new Response(false,err.message);
         else{
-            if(result == "OK")
+            if(result == "USER_CREATED")
                 response = new Response(true,result);
             else
                 response = new Response(false,result);
         }
-        server.send("SIGNUP_RES"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
+        server.send(protocolID+"&"+"SIGNUP_RES"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
     });
 };
 
@@ -36,12 +37,12 @@ eventMap["LOGIN_REQ"] = function(userData:any,rinfo:any,server:any){
         if(err)
             response = new Response(false,err.message);
         else{
-            if(result == 'OK')
+            if(result == 'LOGIN_OK')
                 response = new Response(true,result);
             else
                 response = new Response(false,result);
         }
-        server.send("LOGIN_RES"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
+        server.send(protocolID+"&"+"LOGIN_RES"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
     });
 };
 

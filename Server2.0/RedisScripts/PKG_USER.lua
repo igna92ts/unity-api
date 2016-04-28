@@ -1,10 +1,17 @@
+--[[
+
+CAMBIAR POR MUCHOS HASHES - LEER OPTIMIZACION DE MEMORIA EN REDIS
+
+--]]
+
 --[[USER LOGIN --]]
 local function login(username,password)
+    
     local user_id = tonumber(redis.call("hget","users:lookup:username",username))
     if (user_id ~= nil) then
         local userData = cjson.decode(redis.call("hget","users","user:" .. user_id))
         if userData["password"] == password then
-            return 'OK';
+            return 'LOGIN_OK';
         else
             return "WRONG_PASSWORD"
         end
@@ -15,6 +22,13 @@ end
 
 --[[USER CREATE ACCOUNT --]]
 local function signup(username,password)
+    
+    if(string.len(username) < 5) then
+        return "SHORT_USERNAME"
+    elseif(string.len(password) < 5) then
+        return "SHORT_PASSWORD"
+    end
+    
     local exists = tonumber(redis.call("hget","users:lookup:username",username))
     if (exists == nil) then 
         redis.call("setnx","users:index",0);
@@ -24,9 +38,9 @@ local function signup(username,password)
         userData["username"] = username
         userData["password"] = password
         redis.call("hset","users","user:"..new_id,cjson.encode(userData))
-        return "OK"
+        return "USER_CREATED"
     else
-        return "Username taken"
+        return "USERNAME_TAKEN"
     end
 end
 
