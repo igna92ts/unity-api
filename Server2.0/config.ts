@@ -1,11 +1,8 @@
-import {Connection} from './Entities/Connection'; 
 
-var redis = new Connection("localhost","6379"); 
-var seaport = new Connection("localhost","7999");
-
-
-export let connectionConfig: utils.Map<Connection> = {};
-connectionConfig["redis"] = redis;
-connectionConfig ["seaport"] = seaport;
+export var redisHost:string = "localhost";
+export var redisPort:string = "6379";
+//var seaport = new Connection("localhost","7999");
 
 export var protocolID:string = 'ARMSRACE'
+
+export var configTimeout = 10; //en segundos

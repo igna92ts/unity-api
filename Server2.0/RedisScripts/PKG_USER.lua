@@ -5,12 +5,19 @@ CAMBIAR POR MUCHOS HASHES - LEER OPTIMIZACION DE MEMORIA EN REDIS
 --]]
 
 --[[USER LOGIN --]]
-local function login(username,password)
+local function login(username,password,deviceId)
     
     local user_id = tonumber(redis.call("hget","users:lookup:username",username))
+    
     if (user_id ~= nil) then
         local userData = cjson.decode(redis.call("hget","users","user:" .. user_id))
         if userData["password"] == password then
+            local sessionData = {}
+            sessionData["status"] = "true"
+            sessionData["username"] = username
+            sessionData["state"] = "main_menu"
+            sessionData["current_room"] = ""
+            redis.call("hset","sessions",deviceId,cjson.encode(sessionData))
             return 'LOGIN_OK';
         else
             return "WRONG_PASSWORD"
@@ -48,7 +55,7 @@ end
 local funcName = ARGV[1]
 --[[SWITCH PARA VER QUE LLAMA --]]
 if(funcName == "login()") then
-    return login(KEYS[1],KEYS[2])
+    return login(KEYS[1],KEYS[2],KEYS[3])
 elseif(funcName == "signup()") then
     return signup(KEYS[1],KEYS[2])
 end
