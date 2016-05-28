@@ -14,11 +14,6 @@ redisClient.on('connect', function() {
 redisClient.on('diconnect', function() {
     console.log('disconnected from redis');
 });
-//SET INDEXES
-redisClient.get('d_object_index',function(err:Error,obj:Object){
-  if(err || obj === null)
-    redisClient.set('d_object_index',-1); // asi con el primer incr queda en 0 que hace antes de insertar pkg_player
-});
 
 export = redisClient;
 

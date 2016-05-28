@@ -13,7 +13,15 @@ end
 local function killSession(deviceId)
     if(redis.call("hexists","sessions",deviceId) > 0) then
         local sessionData = cjson.decode(redis.call("hget","sessions",deviceId))
-        redis.call("hdel","players:"..sessionData["current_room"],deviceId)
+        if(sessionData["current_room"] ~= "") then
+            local playerData = cjson.decode(redis.call("hget","players:"..sessionData["current_room"],deviceId))
+            redis.call("hdel","players:"..sessionData["current_room"],deviceId)
+            redis.call("hdel","players:"..sessionData["current_room"]..":lookup:playerName",playerData["playerName"])
+            local roomData = {}
+            roomData = cjson.decode(redis.call("hget","rooms",sessionData["current_room"]))
+            roomData["player_count"] = tonumber(roomData["player_count"]) - 1
+            redis.call("hset","rooms",sessionData["current_room"],cjson.encode(roomData))
+        end
         redis.call("hdel","sessions",deviceId)
     end
 end

@@ -7,7 +7,6 @@ import scriptManager = require('./Redis/ScriptManager');
 import {eventMap} from './Events/EventManager';
 import {protocolID} from "./config";
 import q = require('q');
-import worldManager = require('./Physics/WorldManager');
 import {connectionManager} from "./Connections/ConnectionManager";
 //CONFIG SERVIDOR
 server.on('error', (err:Error) => {

@@ -5,6 +5,8 @@ import {PkgObjects} from '../Redis/PkgObjects';
 import {Response} from "../Entities/Response";
 import {protocolID} from "../config";
 import scriptManager = require('../Redis/ScriptManager');
+import {world} from "../World";
+
 
 
 export var eventMap:utils.Map<Function> = {};
@@ -59,14 +61,14 @@ eventMap["GET_ROOMS"] = function(payload:any,rinfo:any,server:any){
 };
 
 eventMap["ENTER_ROOM"] = function(playerRoom:any,rinfo:any,server:any,deviceId:any){
-    
     scriptManager.run("PKG_ROOM",[playerRoom.playerName,playerRoom.roomName,deviceId],["addPlayerToRoom()"],function(err:Error,result:any){
         if(err)
-            console.log(err);
+            console.log("ENTER  " + err);
         else{
             var response = new Response(true,result);
             server.send(protocolID+"&"+"ROOM_ENTERED"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
             console.log("User: "+deviceId+" entered room with name: "+playerRoom.roomName);
+            world.addPlayerToRoom(playerRoom.roomName);
         }
     });
 }
@@ -76,6 +78,11 @@ eventMap["CREATE_ROOM"] = function(roomData:any,rinfo:any,server:any,deviceId:an
     scriptManager.run("PKG_ROOM",[roomData.roomName,roomData.size,deviceId],["createRoom()"],function(err:Error,result:any){
         if(err)
             console.log(err);
+        else{
+            var response = new Response(true,result);
+            server.send(protocolID+"&"+"ROOM_CREATED"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
+        }
+            
     });  
 };
 
@@ -87,6 +94,13 @@ eventMap["GET_PLAYER_DATA"] = function(roomData:any,rinfo:any,server:any,deviceI
             var response = new Response(true,JSON.parse(result));
             server.send(protocolID+"&"+"PLAYER_DATA"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
         }
+    });  
+};
+
+eventMap["INPUT"] = function(inputData:any,rinfo:any,server:any,deviceId:any){
+    scriptManager.run("PKG_PLAYER",[inputData.newDirection,deviceId],["changeDirection()"],function(err:Error,result:any){
+        if(err)
+            console.log(err);
     });  
 };
 

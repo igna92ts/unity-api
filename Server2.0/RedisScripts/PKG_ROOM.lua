@@ -4,33 +4,36 @@ local function addPlayerToRoom(playerName,roomName,deviceId)
     sessionData["current_room"] = roomName
     sessionData["state"] = "playing"
     redis.call("hset","sessions",deviceId,cjson.encode(sessionData))
-        
+    
+    local roomData = {}
+    roomData = cjson.decode(redis.call("hget","rooms",roomName))
+    roomData["player_count"] = tonumber(roomData["player_count"]) + 1
+    redis.call("hset","rooms",roomName,cjson.encode(roomData))
+    
     local newPlayer = {}
     newPlayer["playerName"] = playerName
-    newPlayer["level"] = 0
-    newPlayer["score"] = 0
-    newPlayer["speed"] = 10
-    newPlayer["state"] = "alive"
-    newPlayer["weaponId"] = 1
-    newPlayer["spriteImg"] = ""
+    newPlayer["largo"] = 1
+    newPlayer["speed"] = 1
+    newPlayer["state"] = "invulnerable"
+    newPlayer["color"] = ""
+    newPlayer["direction"] = "down"
     local playerPos = {}
     playerPos["x"] = 0
     playerPos["y"] = 0
     newPlayer["position"] = playerPos
     redis.call("hset","players:" .. roomName,deviceId,cjson.encode(newPlayer))
-        
+    redis.call("hset","players:" .. roomName .. ":lookup:playerName",playerName,deviceId)
     return cjson.encode(redis.call("hget","players:" .. roomName,deviceId))
 end
 
 local function createRoom(roomName,size,deviceId)
     local roomData = {}
     roomData["room_name"] = roomName
-    roomData["size"] = size
+    roomData["size"] = tonumber(size)
     roomData["player_count"] = 0
-    roomData["current_top"] = ""
-    roomData["map_id"] = ""
     roomData["owner_session"] = deviceId
     redis.call("hset","rooms",roomName,cjson.encode(roomData))
+    return "OK"
 end
 
 local function getRooms()

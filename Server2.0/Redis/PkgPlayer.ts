@@ -8,7 +8,7 @@ import {Vector2D} from "../Physics/Types"
 
 export module PkgPlayer {
 
-	export function registerPlayer(type:string){
+	/*export function registerPlayer(type:string){
 		return q.Promise(function(resolve,reject){
             
 			var player = new Player();
@@ -38,7 +38,7 @@ export module PkgPlayer {
 				});
 			});
 		})
-	}
+	}*/
 
 
 }
