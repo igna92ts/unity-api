@@ -86,6 +86,14 @@ eventMap["CREATE_ROOM"] = function(roomData:any,rinfo:any,server:any,deviceId:an
     });  
 };
 
+eventMap["EXIT_ROOM"] = function(roomData:any,rinfo:any,server:any,deviceId:any){
+    console.log("User: "+deviceId+" exited room with name: "+roomData.roomName);
+    scriptManager.run("PKG_ROOM",[deviceId],["removePlayerFromRoom()"],function(err:Error,result:any){
+        if(err)
+            console.log(err);
+    });  
+};
+
 eventMap["GET_PLAYER_DATA"] = function(roomData:any,rinfo:any,server:any,deviceId:any){
     scriptManager.run("PKG_PLAYER",[roomData.roomName],["getPlayers()"],function(err:Error,result:any){
         if(err)
@@ -100,7 +108,7 @@ eventMap["GET_PLAYER_DATA"] = function(roomData:any,rinfo:any,server:any,deviceI
 eventMap["INPUT"] = function(inputData:any,rinfo:any,server:any,deviceId:any){
     scriptManager.run("PKG_PLAYER",[inputData.newDirection,deviceId],["changeDirection()"],function(err:Error,result:any){
         if(err)
-            console.log(err);
+            console.log("SASSS"+err);
     });  
 };
 

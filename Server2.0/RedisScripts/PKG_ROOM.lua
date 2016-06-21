@@ -26,6 +26,23 @@ local function addPlayerToRoom(playerName,roomName,deviceId)
     return cjson.encode(redis.call("hget","players:" .. roomName,deviceId))
 end
 
+local function removePlayerFromRoom(deviceId)
+    local sessionData = cjson.decode(redis.call("hget","sessions",deviceId))
+    local roomName = sessionData["current_room"]
+    sessionData["current_room"] = ""
+    sessionData["state"] = "menu"
+    redis.call("hset","sessions",deviceId,cjson.encode(sessionData))
+    
+    local playerData = cjson.decode(redis.call("hget","players:"..roomName,deviceId))
+    redis.call("hdel","players:"..roomName,deviceId)
+    redis.call("hdel","players:"..roomName..":lookup:playerName",playerData["playerName"])
+    local roomData = {}
+    roomData = cjson.decode(redis.call("hget","rooms",roomName))
+    roomData["player_count"] = tonumber(roomData["player_count"]) - 1
+    redis.call("hset","rooms",roomName,cjson.encode(roomData))
+    return "OK"
+end
+
 local function createRoom(roomName,size,deviceId)
     local roomData = {}
     roomData["room_name"] = roomName
@@ -61,4 +78,6 @@ elseif(funcName == "addPlayerToRoom()") then
     return addPlayerToRoom(KEYS[1],KEYS[2],KEYS[3])
 elseif(funcName == "getRooms()") then
     return getRooms()
+elseif(funcName == "removePlayerFromRoom()") then
+    return removePlayerFromRoom(KEYS[1])
 end

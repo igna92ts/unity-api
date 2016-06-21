@@ -5,4 +5,4 @@ export var redisPort:string = "6379";
 
 export var protocolID:string = 'ARMSRACE'
 
-export var configTimeout = 10; //en segundos
+export var configTimeout = 2; //en segundos

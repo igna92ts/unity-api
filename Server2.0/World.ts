@@ -9,6 +9,11 @@ export class Room{
         this.roomName = roomName;
         this.heightInTiles = heightInTiles;
         this.widthInTiles = widthInTiles;
+        var _this = this;
+        setInterval(function(){
+            _this.checkCollisions();
+            _this.addPlayers();
+        },1000/60)
     }
     roomName:string;
     players:utils.Map<Player> = {};
@@ -21,8 +26,10 @@ export class Room{
                 console.log("HOLA" + err);
             else{
                 for(var p in _this.players){
-                    if(_this.players[p].toDestroy)
+                    if(_this.players[p].toDestroy){
+                        console.log("deleted" + _this.players[p].toString());
                         delete _this.players[p];
+                    }
                 }
                 var currPlayers = JSON.parse(result);
                 for(var i = 0; i < currPlayers.length; i++){
@@ -34,6 +41,16 @@ export class Room{
                 
             }
         });
+    }
+    checkCollisions(){
+        for(var p in this.players){
+            for(var other in this.players){
+                if(other != p){
+                    if(this.players[p].position.x == this.players[other].position.x && this.players[p].position.y == this.players[other].position.y)
+                        console.log("Collided");
+                }
+            }
+        }
     }
   
 }
