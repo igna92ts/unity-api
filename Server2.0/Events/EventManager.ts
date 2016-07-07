@@ -103,6 +103,7 @@ eventMap["GET_PLAYER_DATA"] = function(roomData:any,rinfo:any,server:any,deviceI
             server.send(protocolID+"&"+"PLAYER_DATA"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
         }
     });  
+    
 };
 
 eventMap["INPUT"] = function(inputData:any,rinfo:any,server:any,deviceId:any){
@@ -111,6 +112,17 @@ eventMap["INPUT"] = function(inputData:any,rinfo:any,server:any,deviceId:any){
             console.log("SASSS"+err);
     });  
 };
+
+eventMap["GET_FRUIT"] = function(roomData:any,rinfo:any,server:any,deviceId:any){
+    scriptManager.run("PKG_FRUIT",[roomData.roomName],["getFruit()"],function(err:Error,result:any){
+        if(err)
+            console.log("Error getting fruit" +err);
+        else{
+            var response = new Response(true,JSON.parse(result));
+            server.send(protocolID+"&"+"FRUIT_SPAWNED"+"&"+JSON.stringify(response),rinfo.port,rinfo.address);
+        }
+    });
+}
 
 /*eventMap["GET_UPDATES"] = function(msg:string,rinfo:any,server:any){
 	var gameState = PkgObjects.getGameState();

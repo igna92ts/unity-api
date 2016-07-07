@@ -17,10 +17,19 @@ end
 local function changeInvulState(playerName,roomName)
     local deviceId = redis.call("hget","players:" .. roomName .. ":lookup:playerName",playerName)
     local playerData = {}
+    local result
     playerData = cjson.decode(redis.call("hget","players:" .. roomName,deviceId))
-    playerData["state"] = "vulnerable"
+    playerData["largo"] = 1
+    playerData["speed"] = 1
+    if(playerData["state"] == "invulnerable") then
+        playerData["state"] = "vulnerable";
+        result = "vulnerable";
+    else
+        playerData["state"] = "invulnerable";
+        result = "invulnerable";
+    end
     redis.call("hset","players:"..roomName,deviceId,cjson.encode(playerData));
-    return "vulnerable"
+    return result
 end
 
 local function movePlayer(playerName,roomName,xPos,yPos)
@@ -32,6 +41,7 @@ local function movePlayer(playerName,roomName,xPos,yPos)
         playerPos["x"] = tonumber(xPos)
         playerPos["y"] = tonumber(yPos)
         playerData["position"] = playerPos
+        
         redis.call("hset","players:"..roomName,deviceId,cjson.encode(playerData));
         return cjson.encode(playerData)
     else
@@ -43,8 +53,23 @@ local function changeDirection(newDirection,deviceId)
     if(redis.call("hexists","sessions",deviceId) > 0) then
         local sessionData = cjson.decode(redis.call("hget","sessions",deviceId))
         local playerData = cjson.decode(redis.call("hget","players:"..sessionData["current_room"],deviceId))
+    
         playerData["direction"] = newDirection
         redis.call("hset","players:"..sessionData["current_room"],deviceId,cjson.encode(playerData))
+    end
+end
+
+local function eat(playerName,roomName)
+    local deviceId = redis.call("hget","players:" .. roomName .. ":lookup:playerName",playerName)
+    if(deviceId) then
+        local playerData = {}
+        playerData = cjson.decode(redis.call("hget","players:"..roomName,deviceId))
+        playerData["largo"] = tonumber(playerData["largo"]) + 1
+        playerData["speed"] = tonumber(playerData["speed"]) + 1
+        redis.call("hset","players:" .. roomName,deviceId,cjson.encode(playerData))
+        return cjson.encode(playerData)
+    else
+        return "ERROR"
     end
 end
   
@@ -59,4 +84,6 @@ elseif(funcName == "movePlayer()") then
     return movePlayer(KEYS[1],KEYS[2],KEYS[3],KEYS[4])
 elseif(funcName == "changeDirection()") then
     return changeDirection(KEYS[1],KEYS[2])
+elseif(funcName == "eat()") then
+    return eat(KEYS[1],KEYS[2])
 end

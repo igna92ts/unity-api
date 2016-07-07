@@ -1,5 +1,6 @@
 import scriptManager = require('./Redis/ScriptManager');
 import {Player} from './Entities/Player';
+import {Fruit} from './Entities/Fruit';
 import {Vector2D} from "./Physics/Types"
 
 // un 1 es cuerpo o obstaculo, un 2 es una cabeza un 3 es una cola y un 0 esta libre
@@ -9,6 +10,7 @@ export class Room{
         this.roomName = roomName;
         this.heightInTiles = heightInTiles;
         this.widthInTiles = widthInTiles;
+        this.fruit = new Fruit(roomName);
         var _this = this;
         setInterval(function(){
             _this.checkCollisions();
@@ -19,6 +21,7 @@ export class Room{
     players:utils.Map<Player> = {};
     widthInTiles:number;
     heightInTiles:number;
+    fruit:Fruit;
     addPlayers(){
         var _this = this;
         scriptManager.run("PKG_PLAYER",[_this.roomName],["getPlayers()"],function(err:Error,result:any){
@@ -43,13 +46,36 @@ export class Room{
         });
     }
     checkCollisions(){
+    
+        for(var p in this.players){
+            if(this.players[p].position.x == this.fruit.position.x && this.players[p].position.y == this.fruit.position.y){
+                this.fruit.spawn(this.roomName);
+                this.players[p].eat();
+            }
+        }
         for(var p in this.players){
             for(var other in this.players){
-                if(other != p){
-                    if(this.players[p].position.x == this.players[other].position.x && this.players[p].position.y == this.players[other].position.y)
-                        console.log("Collided");
+                if(other != p && this.players[p].state == "vulnerable" && this.players[other].state == "vulnerable"){
+                    if(this.players[p].position.x == this.players[other].position.x && this.players[p].position.y == this.players[other].position.y){
+                        this.players[p].onCollision();
+                        this.players[other].onCollision();
+                    }else{
+                        if(this.isHittingTail(this.players[p],this.players[other].getTailArray()))
+                            this.players[p].onCollision();
+                        if(this.isHittingTail(this.players[other],this.players[p].getTailArray()))
+                            this.players[other].onCollision();
+                    }
                 }
             }
+        }
+    }
+    isHittingTail(player:Player,tailArr:Array<Vector2D>){
+        for(var i =0;i < tailArr.length; i++){
+            if(tailArr[i].x == player.position.x && tailArr[i].y == player.position.y){
+                console.log(tailArr);
+                return true;
+            }
+                
         }
     }
   
