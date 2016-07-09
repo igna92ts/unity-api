@@ -9,6 +9,7 @@ export class Connection{
         this.port = port;
         this.deviceId = deviceId;
         this.timeOut = false;
+        this.watchingAd = false;
         scriptManager.run("PKG_SESSION",[this.deviceId],["startSession()"],function(err:Error,result:any){
             if(err)
                 console.log(err);
@@ -21,19 +22,22 @@ export class Connection{
     secondsForTimeout:number;
     timeOutTimer:number;
     interval:any;
+    watchingAd:boolean;
     informDisconnect(reason:string){
         console.log(this.deviceId + "   disconnected:   "+reason);
     }
     checkTimeout(){
-        this.timeOutTimer--;
-        if(this.timeOutTimer <= 0){
-            this.timeOut = true;
-            this.informDisconnect("TIMEOUT");
-            scriptManager.run("PKG_SESSION",[this.deviceId],["killSession()"],function(err:Error,result:any){
-                if(err)
-                    console.log(err);
-            });
-            clearInterval(this.interval);
+        if(!this.watchingAd){
+            this.timeOutTimer--;
+            if(this.timeOutTimer <= 0){
+                this.timeOut = true;
+                this.informDisconnect("TIMEOUT");
+                scriptManager.run("PKG_SESSION",[this.deviceId],["killSession()"],function(err:Error,result:any){
+                    if(err)
+                        console.log(err);
+                });
+                clearInterval(this.interval);
+            }
         }
     }
     setTimer(seconds:number){

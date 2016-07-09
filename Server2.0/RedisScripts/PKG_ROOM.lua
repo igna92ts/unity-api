@@ -17,9 +17,6 @@ local function addPlayerToRoom(playerName,roomName,deviceId)
     newPlayer["state"] = "invulnerable"
     newPlayer["color"] = ""
     newPlayer["direction"] = "down"
-    local directions = {}
-    directions[0] = "down"
-    newPlayer["pastDirections"] = directions
     local playerPos = {}
     playerPos["x"] = 0
     playerPos["y"] = 0

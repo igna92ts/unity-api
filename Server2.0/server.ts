@@ -21,7 +21,9 @@ server.on('message',(msg:string,rinfo:any) => {
     var deviceId:string = data[1];
     var event:string = data[2];
     var payLoad:string = data[3];
-    if(connectionManager.checkConnection(deviceId,rinfo,server) == "OK"){//si la connecion esta viva o es nueva	
+    if(payLoad == "AD_START" || event == "AD_START")
+        console.log(payLoad + " " + event);
+    if(connectionManager.checkConnection(deviceId,rinfo,server,event) == "OK"){//si la connecion esta viva o es nueva	
     	if(recievedProtocol == protocolID){
         	if(eventMap[event] !== undefined)
         		eventMap[event](payLoad!==undefined?JSON.parse(payLoad):null,rinfo,server,deviceId);

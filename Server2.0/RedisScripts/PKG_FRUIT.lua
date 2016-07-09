@@ -3,7 +3,7 @@ local function spawnFruit(roomName,randomSeed)
     local fruitPos = {}
     math.randomseed(randomSeed)
     fruitPos["x"] = math.random(0,40)
-    fruitPos["y"] = math.random(0,80)
+    fruitPos["y"] = math.random(0,70)
     fruit["position"] = fruitPos
     redis.call("hset","fruits",roomName,cjson.encode(fruit))
     return cjson.encode(fruit)

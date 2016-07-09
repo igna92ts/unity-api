@@ -13,9 +13,16 @@ export class ConnectionManager{
         this.connectionList[deviceId].setTimer(configTimeout);
         
     }
-    checkConnection(deviceId:string,rinfo:any,server:any){
+    checkConnection(deviceId:string,rinfo:any,server:any,event:any){
 
         if(this.connectionList !== undefined && this.connectionList[deviceId] != null){
+            if(event == "AD_START"){
+                this.connectionList[deviceId].watchingAd = true;
+                this.connectionList[deviceId].timeOut = false;
+            }
+            if(event == "AD_END"){
+                this.connectionList[deviceId].watchingAd = false;
+            }
             if(!this.connectionList[deviceId].timeOut){
                 this.connectionList[deviceId].refreshTimer();
                 return "OK";

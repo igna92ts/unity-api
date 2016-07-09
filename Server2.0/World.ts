@@ -72,7 +72,6 @@ export class Room{
     isHittingTail(player:Player,tailArr:Array<Vector2D>){
         for(var i =0;i < tailArr.length; i++){
             if(tailArr[i].x == player.position.x && tailArr[i].y == player.position.y){
-                console.log(tailArr);
                 return true;
             }
                 

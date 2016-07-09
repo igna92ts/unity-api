@@ -65,7 +65,7 @@ export class Player{
                     }
                 }
             });
-        },(200-_this.speed*10))
+        },(200-_this.speed*5))
     }
     adjustPosition(){
         switch(this.direction) {

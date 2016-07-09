@@ -53,8 +53,17 @@ local function changeDirection(newDirection,deviceId)
     if(redis.call("hexists","sessions",deviceId) > 0) then
         local sessionData = cjson.decode(redis.call("hget","sessions",deviceId))
         local playerData = cjson.decode(redis.call("hget","players:"..sessionData["current_room"],deviceId))
-    
-        playerData["direction"] = newDirection
+            
+        if(playerData["direction"] == "up" and newDirection ~= "down") then
+            playerData["direction"] = newDirection
+        elseif(playerData["direction"] == "down" and newDirection ~= "up") then
+            playerData["direction"] = newDirection
+        elseif(playerData["direction"] == "right" and newDirection ~= "left") then 
+            playerData["direction"] = newDirection
+        elseif(playerData["direction"] == "left" and newDirection ~= "right") then
+            playerData["direction"] = newDirection
+        end
+        
         redis.call("hset","players:"..sessionData["current_room"],deviceId,cjson.encode(playerData))
     end
 end
